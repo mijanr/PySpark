@@ -2,6 +2,13 @@
 This repository contains code for PySpark, for practice and learning purpose.
 This repository is inspired and mostly based on another amazing GitHub repository [learning-apache-spark](https://github.com/MingChen0919/learning-apache-spark).
 
+## MLlib Use Cases
+In this repository, we will use the following MLlib use cases:
+- Regression
+- Classification
+- Clustering
+- Natural Language Processing (NLP)
+
 ## Set JAVA_HOME Path in Ubuntu
 1. Install opendk-8-jdk using the following command in terminal:
 ```
