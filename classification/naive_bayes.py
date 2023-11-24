@@ -5,6 +5,7 @@ from pyspark.ml.feature import StringIndexer
 from pyspark.ml.classification import NaiveBayes
 from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 from pyspark.ml import Pipeline
+from pyspark.ml.tuning import CrossValidator, ParamGridBuilder
 import os, git
 
 def load_data(data_path="data/iris.csv", train_split=0.8):
@@ -44,6 +45,15 @@ def test(model, test_data):
     print(f"Weighted precision: {evaluator.setMetricName('weightedPrecision').evaluate(pred_test)}")
     print(f"Weighted recall: {evaluator.setMetricName('weightedRecall').evaluate(pred_test)}")
 
+# cross validation
+def cross_validation(train_data):
+    # train the model
+    nb = NaiveBayes(featuresCol="features", labelCol="label")
+    param_grid = ParamGridBuilder().addGrid(nb.smoothing, [0, 1, 2, 4, 8]).build()
+    evaluator = MulticlassClassificationEvaluator(metricName='accuracy')
+    crossval = CrossValidator(estimator=nb, estimatorParamMaps=param_grid, evaluator=evaluator, numFolds=5)
+    cv_model = crossval.fit(train_data)
+    return cv_model
 def main():
     # load the data
     train_data, test_data = load_data()
@@ -52,7 +62,12 @@ def main():
     naivebayes_model = train(train_data)
 
     # test the model
-    test(naivebayes_model, train_data, test_data)
+    test(naivebayes_model, test_data)
+
+    # cross validation results
+    cv_model = cross_validation(train_data)
+    print(f"Results from cross validation:")
+    test(cv_model, test_data)
 
 if __name__ == "__main__":
     main()
