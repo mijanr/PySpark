@@ -32,7 +32,7 @@ def train(train_data):
     nb = NaiveBayes(featuresCol="features", labelCol="label")
     return nb.fit(train_data)
 
-def test(model, train_data, test_data):
+def test(model, test_data):
     # test the model
     pred_test = model.transform(test_data)
 
